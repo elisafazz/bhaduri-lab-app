@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import HeaderClient from "@/components/HeaderClient";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
@@ -10,15 +12,40 @@ export const metadata: Metadata = {
   description: "Resources and links for the Bhaduri Lab",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let isAdmin = false;
+  let isLoggedIn = false;
+
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      isLoggedIn = true;
+      // Use service role to bypass RLS — confirmed working via /api/debug-auth
+      const adminClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+        process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      );
+      const { data: profile } = await adminClient
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (profile?.role === "admin") isAdmin = true;
+    }
+  } catch {
+    // Not logged in or env vars not set
+  }
+
   return (
     <html lang="en">
       <body className="antialiased min-h-screen flex flex-col">
-        <HeaderClient />
+        <Header isAdmin={isAdmin} isLoggedIn={isLoggedIn} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

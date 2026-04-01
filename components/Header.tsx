@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ReportBugButton from "./ReportBugButton";
+import SignOutButton from "./SignOutButton";
 
 type Props = {
   isAdmin?: boolean;
@@ -33,14 +34,7 @@ export default function Header({ isAdmin, isLoggedIn }: Props) {
             </Link>
           )}
           {isLoggedIn ? (
-            <form action="/api/auth/logout" method="POST">
-              <button
-                type="submit"
-                className="text-xs font-medium text-white/50 hover:text-white/80 transition-colors"
-              >
-                Sign out
-              </button>
-            </form>
+            <SignOutButton />
           ) : (
             <Link
               href="/login"
