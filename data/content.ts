@@ -43,6 +43,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    id: "offboarding",
+    title: "Offboarding",
+    description: "Resources for members leaving the lab.",
+    links: [
+      {
+        label: "Offboarding Checklist",
+        description: "Steps to complete before leaving the lab.",
+        url: "#placeholder",
+      },
+    ],
+  },
+  {
     id: "coding",
     title: "Coding",
     description: "Computational resources and tutorials for lab analyses.",
