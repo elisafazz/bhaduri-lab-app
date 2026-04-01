@@ -12,7 +12,7 @@ export default function Header({ isAdmin, isLoggedIn }: Props) {
   return (
     <header className="bg-[#1C1D2E] border-b border-white/10">
       <div className="max-w-3xl mx-auto px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <Image
             src="/bhaduri-lab-logo.jpg"
             alt="Bhaduri Lab"
@@ -23,7 +23,7 @@ export default function Header({ isAdmin, isLoggedIn }: Props) {
           <span className="text-white font-semibold text-sm tracking-wide">
             Bhaduri Lab
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3">
           {isAdmin && (
             <Link
