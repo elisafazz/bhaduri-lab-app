@@ -18,7 +18,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-[#1C1D2E] tracking-tight">
           Bhaduri Lab
         </h1>
-        <p className="mt-2 text-sm text-[#6B7280] max-w-md">
+        <p className="mt-2 text-sm text-[#374151] font-medium max-w-md">
           Resources, protocols, and links for lab members.
         </p>
       </div>

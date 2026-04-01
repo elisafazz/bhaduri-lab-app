@@ -29,7 +29,7 @@ export default function LinkCard({ label, description, url, badge }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-[#1C1D2E] text-sm leading-snug">
+            <span className="font-semibold text-[#1C1D2E] text-sm leading-snug">
               {label}
             </span>
             {badge && (
@@ -48,7 +48,7 @@ export default function LinkCard({ label, description, url, badge }: Props) {
             )}
           </div>
           {description && (
-            <p className="mt-1 text-xs text-[#6B7280] leading-relaxed">
+            <p className="mt-1 text-sm text-[#374151] leading-relaxed">
               {description}
             </p>
           )}
@@ -56,7 +56,7 @@ export default function LinkCard({ label, description, url, badge }: Props) {
         {!isPlaceholder && (
           <ExternalLink
             size={14}
-            className="text-[#8B9DC3] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5"
+            className="text-[#8B9DC3] opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5"
           />
         )}
       </div>
