@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getCurrentProfile } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +20,19 @@ export default async function RootLayout({
   let isLoggedIn = false;
 
   try {
-    const profile = await getCurrentProfile();
-    if (profile) {
+    const supabase = createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
       isLoggedIn = true;
-      isAdmin = profile.role === "admin";
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (profile?.role === "admin") isAdmin = true;
     }
   } catch {
-    // Not logged in
+    // Not logged in or Supabase not configured yet
   }
 
   return (

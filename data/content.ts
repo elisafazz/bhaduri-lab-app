@@ -3,7 +3,6 @@ export type ResourceLink = {
   description?: string;
   url: string;
   badge?: string;
-  note?: string;
 };
 
 export type Section = {
@@ -17,22 +16,11 @@ export const sections: Section[] = [
   {
     id: "shared-resources",
     title: "Shared Resources",
-    description: "Central lab resources shared across the team. The shared Google Drive contains: Protocols, UCLA Core Sequencing Submission, BICAN UM1, Bio-rad S3e Sorter, Chemical Safety, Quotes, Fellowship Templates, Travel & Reimbursements, Lab Meeting Slides, Data, Common Databases.",
+    description: "Central lab resources shared across the team. Contains: Protocols, BICAN UM1, Bio-rad S3e Sorter, Chemical Safety, Quotes, Fellowship Templates, Travel & Reimbursements, Lab Meeting Slides, Data, Common Databases.",
     links: [
       {
         label: "Bhaduri Lab Shared Google Drive",
         description: "Main shared drive for all lab documents, protocols, and resources.",
-        url: "https://drive.google.com/drive/u/1/folders/1a_6AwkZNbMYaZzfFsjblWp1ahWnkIqg4",
-      },
-    ],
-  },
-  {
-    id: "protocols",
-    title: "Protocols",
-    links: [
-      {
-        label: "UCLA Core Sequencing Submission",
-        description: "Forms and instructions for submitting samples to the UCLA sequencing core.",
         url: "https://drive.google.com/drive/u/1/folders/1a_6AwkZNbMYaZzfFsjblWp1ahWnkIqg4",
       },
     ],
@@ -77,12 +65,12 @@ export const sections: Section[] = [
       {
         label: "Elisa Fazzari — CellTagging GitHub",
         description: "CellTagging pipeline and analysis code.",
-        url: "#placeholder",
+        url: "https://github.com/Bhaduri-Lab/Fazzari_CellTag_Analysis",
       },
       {
         label: "Patricia Nano — Meta-atlas GitHub",
         description: "Meta-atlas project repository.",
-        url: "#placeholder",
+        url: "https://github.com/Bhaduri-Lab/dev-ctx-meta-atlas",
       },
     ],
   },
@@ -93,7 +81,7 @@ export const sections: Section[] = [
     links: [
       {
         label: "Bhaduri Lab FASTQs",
-        description: "Primary storage for all lab FASTQ files. Do not delete without approval.",
+        description: "ALL sequencing FASTQs should be backed up here.",
         url: "https://uclahs.app.box.com/folder/217378227400",
         badge: "IMPORTANT",
       },

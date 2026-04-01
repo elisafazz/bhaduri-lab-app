@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+function getSupabase() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 export default function LoginForm() {
   const router = useRouter();
@@ -17,6 +24,7 @@ export default function LoginForm() {
     setError("");
     setLoading(true);
 
+    const supabase = getSupabase();
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -48,9 +56,7 @@ export default function LoginForm() {
       </div>
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="text-xs font-medium text-[#6B7280]">
-            Password
-          </label>
+          <label className="text-xs font-medium text-[#6B7280]">Password</label>
           <Link
             href="/forgot-password"
             className="text-xs text-[#8B9DC3] hover:text-[#6B75B0] transition-colors"
