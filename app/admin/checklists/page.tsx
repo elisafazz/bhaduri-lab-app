@@ -1,28 +1,58 @@
 import { redirect } from "next/navigation";
-import { getCurrentProfile, getAllProfiles, getChecklistItems } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import ChecklistPanel from "@/components/admin/ChecklistPanel";
 import Link from "next/link";
+import type { Profile, ChecklistItem } from "@/lib/supabase";
 
 export const metadata = {
   title: "Checklists — Bhaduri Lab",
 };
 
 export default async function ChecklistsPage() {
-  const profile = await getCurrentProfile();
+  const supabase = createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!profile || profile.role !== "admin") {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
-  const allProfiles = await getAllProfiles();
-  const members = allProfiles.filter((p) => p.role === "member");
+  const adminClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") redirect("/");
+
+  const { data: allProfiles } = await adminClient
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  const members = ((allProfiles ?? []) as Profile[]).filter((p) => p.role === "member");
 
   const memberChecklists = await Promise.all(
-    members.map(async (member) => ({
-      member,
-      onboarding: await getChecklistItems(member.id, "onboarding"),
-      offboarding: await getChecklistItems(member.id, "offboarding"),
-    }))
+    members.map(async (member) => {
+      const { data: onboarding } = await adminClient
+        .from("checklist_items")
+        .select("*")
+        .eq("member_id", member.id)
+        .eq("checklist_type", "onboarding");
+      const { data: offboarding } = await adminClient
+        .from("checklist_items")
+        .select("*")
+        .eq("member_id", member.id)
+        .eq("checklist_type", "offboarding");
+      return {
+        member,
+        onboarding: (onboarding ?? []) as ChecklistItem[],
+        offboarding: (offboarding ?? []) as ChecklistItem[],
+      };
+    })
   );
 
   return (
@@ -42,7 +72,7 @@ export default async function ChecklistsPage() {
         </Link>
       </div>
 
-      <ChecklistPanel memberChecklists={memberChecklists} adminId={profile.id} />
+      <ChecklistPanel memberChecklists={memberChecklists} adminId={user.id} />
     </div>
   );
 }

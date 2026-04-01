@@ -1,20 +1,38 @@
 import { redirect } from "next/navigation";
-import { getCurrentProfile, getAllProfiles } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import MemberTable from "@/components/admin/MemberTable";
 import Link from "next/link";
+import type { Profile } from "@/lib/supabase";
 
 export const metadata = {
   title: "Admin — Bhaduri Lab",
 };
 
 export default async function AdminPage() {
-  const profile = await getCurrentProfile();
+  const supabase = createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!profile || profile.role !== "admin") {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
-  const members = await getAllProfiles();
+  // Use service role to bypass RLS
+  const adminClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") redirect("/");
+
+  const { data: members } = await adminClient
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: true });
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -33,7 +51,7 @@ export default async function AdminPage() {
         </Link>
       </div>
 
-      <MemberTable members={members} />
+      <MemberTable members={(members ?? []) as Profile[]} />
     </div>
   );
 }
