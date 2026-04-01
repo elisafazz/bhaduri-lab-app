@@ -33,7 +33,11 @@ export default function LinkCard({ label, description, url, badge }: Props) {
               {label}
             </span>
             {badge && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200">
+              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold border ${
+                badge === "HIPAA"
+                  ? "bg-red-50 text-red-700 border-red-200"
+                  : "bg-amber-100 text-amber-700 border-amber-200"
+              }`}>
                 {badge}
               </span>
             )}

@@ -5,6 +5,8 @@ import { Profile, ChecklistItem, upsertChecklistItem } from "@/lib/supabase";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 const ONBOARDING_ITEMS = [
+  { key: "info_sheet", label: "Fill out lab member info sheet", url: "https://docs.google.com/forms/d/e/1FAIpQLSfUhGS6oZjPrrWiKghUe9HOaQcyaPwxuQprMEQI43r_zv807g/viewform?usp=header" },
+  { key: "google_drive", label: "Give access to Bhaduri Lab Google Drive", url: "https://drive.google.com/drive/u/1/folders/1a_6AwkZNbMYaZzfFsjblWp1ahWnkIqg4" },
   { key: "building_access", label: "Building access" },
   { key: "training", label: "Training confirmed" },
   { key: "lab_website", label: "Added to lab website" },
@@ -40,7 +42,7 @@ function ChecklistRow({
   type,
   adminId,
 }: {
-  itemDef: { key: string; label: string };
+  itemDef: { key: string; label: string; url?: string };
   items: ChecklistItem[];
   memberId: string;
   type: "onboarding" | "offboarding";
@@ -65,10 +67,22 @@ function ChecklistRow({
         checked={checked}
         onChange={toggle}
         disabled={loading}
-        className="w-4 h-4 accent-[#6B75B0] cursor-pointer"
+        className="w-4 h-4 accent-[#6B75B0] cursor-pointer flex-shrink-0"
       />
       <span className={`text-sm transition-colors ${checked ? "line-through text-[#6B7280]" : "text-[#1C1D2E]"}`}>
-        {itemDef.label}
+        {itemDef.url && !checked ? (
+          <a
+            href={itemDef.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[#6B75B0] hover:underline"
+          >
+            {itemDef.label}
+          </a>
+        ) : (
+          itemDef.label
+        )}
       </span>
     </label>
   );
