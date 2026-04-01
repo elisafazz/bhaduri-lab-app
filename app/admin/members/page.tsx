@@ -1,15 +1,16 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { createClient } from "@supabase/supabase-js";
+import MemberTable from "@/components/admin/MemberTable";
 import ChecklistPanel from "@/components/admin/ChecklistPanel";
 import Link from "next/link";
 import type { Profile, ChecklistItem } from "@/lib/supabase";
 
 export const metadata = {
-  title: "Checklists — Bhaduri Lab",
+  title: "Members — Bhaduri Lab",
 };
 
-export default async function ChecklistsPage() {
+export default async function MembersPage() {
   const supabase = createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -59,9 +60,9 @@ export default async function ChecklistsPage() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-xl font-bold text-[#1C1D2E]">Checklists</h1>
+          <h1 className="text-xl font-bold text-[#1C1D2E]">Members</h1>
           <p className="text-sm text-[#6B7280] mt-1">
-            Onboarding and offboarding per lab member.
+            Manage lab member access and checklists.
           </p>
         </div>
         <Link
@@ -72,7 +73,18 @@ export default async function ChecklistsPage() {
         </Link>
       </div>
 
-      <ChecklistPanel memberChecklists={memberChecklists} adminId={user.id} />
+      <div className="space-y-10">
+        <MemberTable members={(allProfiles ?? []) as Profile[]} />
+
+        {memberChecklists.length > 0 && (
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#8B9DC3] mb-4">
+              Per-Member Checklists
+            </h2>
+            <ChecklistPanel memberChecklists={memberChecklists} adminId={user.id} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
