@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { createClient } from "@supabase/supabase-js";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +50,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col">
+      <body className={`${inter.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <Header isAdmin={isAdmin} isLoggedIn={isLoggedIn} />
         <main className="flex-1">{children}</main>
         <Footer />
