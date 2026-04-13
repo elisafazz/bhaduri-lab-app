@@ -28,11 +28,17 @@ export default async function RootLayout({
 
   try {
     const supabase = createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+
+    // Race auth check against a 3s timeout to prevent page hangs
+    const authResult = await Promise.race([
+      supabase.auth.getUser(),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000)),
+    ]);
+
+    const user = authResult && "data" in authResult ? authResult.data.user : null;
 
     if (user) {
       isLoggedIn = true;
-      // Use service role to bypass RLS — confirmed working via /api/debug-auth
       const adminClient = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL || "",
         process.env.SUPABASE_SERVICE_ROLE_KEY || ""
