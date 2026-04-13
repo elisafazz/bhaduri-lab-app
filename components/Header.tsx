@@ -10,25 +10,25 @@ type Props = {
 
 export default function Header({ isAdmin, isLoggedIn }: Props) {
   return (
-    <header className="bg-[#1C1D2E] border-b border-white/10">
-      <div className="max-w-3xl mx-auto px-6 py-3 flex items-center justify-between">
+    <header className="bg-[#1C1D2E]">
+      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <Image
             src="/bhaduri-lab-logo.jpg"
             alt="Bhaduri Lab"
-            width={36}
-            height={36}
+            width={32}
+            height={32}
             className="rounded-full object-cover"
           />
           <span className="text-white font-semibold text-sm tracking-wide">
             Bhaduri Lab
           </span>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {isAdmin && (
             <Link
               href="/admin"
-              className="text-xs font-medium text-[#B8C5E0] hover:text-white transition-colors"
+              className="text-sm font-medium text-white/60 hover:text-white transition-colors"
             >
               Admin
             </Link>
@@ -38,7 +38,7 @@ export default function Header({ isAdmin, isLoggedIn }: Props) {
           ) : (
             <Link
               href="/login"
-              className="text-xs font-medium text-[#B8C5E0] hover:text-white transition-colors"
+              className="text-sm font-medium text-white/60 hover:text-white transition-colors"
             >
               Sign in
             </Link>
