@@ -177,6 +177,11 @@ export const sections: Section[] = [
         description: "Official Bhaduri Lab website.",
         url: "#placeholder",
       },
+      {
+        label: "This Site's Source Code",
+        description: "GitHub repo for this landing page. See README for how to edit, or FORK-FOR-YOUR-LAB.md to copy it for your own lab.",
+        url: "https://github.com/elisafazz/bhaduri-lab-app",
+      },
     ],
   },
   {
