@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { createSupabaseServerClient } from "@/utils/supabase/server";
-import { createClient } from "@supabase/supabase-js";
+import { ROLE_COOKIE, verifyRoleCookie } from "@/lib/auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,36 +23,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let isAdmin = false;
-  let isLoggedIn = false;
-
-  try {
-    const supabase = createSupabaseServerClient();
-
-    // Race auth check against a 3s timeout to prevent page hangs
-    const authResult = await Promise.race([
-      supabase.auth.getUser(),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000)),
-    ]);
-
-    const user = authResult && "data" in authResult ? authResult.data.user : null;
-
-    if (user) {
-      isLoggedIn = true;
-      const adminClient = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-        process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-      );
-      const { data: profile } = await adminClient
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-      if (profile?.role === "admin") isAdmin = true;
-    }
-  } catch {
-    // Not logged in or env vars not set
-  }
+  const cookie = cookies().get(ROLE_COOKIE)?.value;
+  const role = await verifyRoleCookie(cookie);
+  const isLoggedIn = role !== null;
+  const isAdmin = role === "admin";
 
   return (
     <html lang="en">

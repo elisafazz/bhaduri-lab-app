@@ -6,6 +6,7 @@ import { Bug, X, Send, CheckCircle } from "lucide-react";
 export default function ReportBugButton() {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
+  const [name, setName] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -17,7 +18,7 @@ export default function ReportBugButton() {
       const res = await fetch("/api/report-bug", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: text }),
+        body: JSON.stringify({ description: text, name: name.trim() || null }),
       });
 
       if (res.ok) {
@@ -26,6 +27,7 @@ export default function ReportBugButton() {
           setOpen(false);
           setStatus("idle");
           setText("");
+          setName("");
         }, 2000);
       } else {
         setStatus("error");
@@ -69,6 +71,13 @@ export default function ReportBugButton() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name (optional)"
+                  className="w-full border border-[#D4D9EE] rounded-xl p-3 text-sm text-[#1C1D2E] placeholder-gray-400 focus:outline-none focus:border-[#8B9DC3] mb-2"
+                />
                 <textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}

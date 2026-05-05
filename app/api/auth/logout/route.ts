@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/utils/supabase/server";
+import { ROLE_COOKIE } from "@/lib/auth";
 
 export async function POST() {
-  const supabase = createSupabaseServerClient();
-  await supabase.auth.signOut();
-  return NextResponse.redirect(
-    new URL("/login", process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000")
-  );
+  const res = NextResponse.json({ ok: true });
+  res.cookies.set(ROLE_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
+  return res;
 }

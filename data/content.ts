@@ -41,6 +41,11 @@ export const sections: Section[] = [
         description: "Main shared drive for all lab documents, protocols, and resources.",
         url: "https://drive.google.com/drive/u/1/folders/1a_6AwkZNbMYaZzfFsjblWp1ahWnkIqg4",
       },
+      {
+        label: "Common Databases",
+        description: "Shared inventories: primers, plasmids, LN2 stocks, and other common lab databases.",
+        url: "https://drive.google.com/drive/u/4/folders/1W01U0Rsjqcum-B6AWYxq-00uVYhWqkWy",
+      },
     ],
   },
   {
@@ -55,6 +60,11 @@ export const sections: Section[] = [
         label: "Lab Member Info Sheet",
         description: "Fill this out when you join the lab.",
         url: "https://docs.google.com/forms/d/e/1FAIpQLSfUhGS6oZjPrrWiKghUe9HOaQcyaPwxuQprMEQI43r_zv807g/viewform?usp=header",
+      },
+      {
+        label: "Mouse Work Training (DLAM ARC Protocol)",
+        description: "Required UCLA training for working with lab mice. Complete before any animal work.",
+        url: "https://dlam.dgsom.ucla.edu/education-and-training/training-requirements-for-arc-protocol",
       },
       {
         label: "Requirements List",

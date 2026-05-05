@@ -1,12 +1,11 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ROLE_COOKIE, verifyRoleCookie } from "@/lib/auth";
 
-const PUBLIC_PATHS = ["/login", "/forgot-password", "/reset-password"];
+const PUBLIC_PATHS = ["/login"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow API routes and public auth pages through
   if (
     pathname.startsWith("/api/") ||
     PUBLIC_PATHS.some((p) => pathname.startsWith(p))
@@ -14,37 +13,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  let response = NextResponse.next({ request });
+  const cookie = request.cookies.get(ROLE_COOKIE)?.value;
+  const role = await verifyRoleCookie(cookie);
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder",
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
+  if (!role) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  return response;
+  if (pathname.startsWith("/admin") && role !== "admin") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
