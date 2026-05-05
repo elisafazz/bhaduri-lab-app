@@ -4,6 +4,8 @@ Internal landing page for the Bhaduri Lab. Live at **https://bhaduri-lab.elisafa
 
 Built and maintained with Claude Code. This README is written for the next person who wants to make a change -- copy the prompts below into Claude (or any AI coding assistant with file-edit + git access) and let it do the work.
 
+**Running a different lab and want your own copy of this site?** See `FORK-FOR-YOUR-LAB.md` -- it walks through cloning, rebranding, and deploying a fork in about an hour.
+
 ---
 
 ## What this app is
